@@ -92,8 +92,8 @@ def collect(platform, program, domain, out_of_scopes):
     output_tmp = f'/tmp/automan_{"".join([random.choice(string.hexdigits) for i in range(16)]).lower()}.tmp'
     cmds = []
     cmds.append(f"amass enum -d {domain} -passive -norecursive | sed 's/^/{platform} {program} /g' >> {output_tmp}")
-    # if os.path.exists(config_resolver):
-    #     cmds.append(f"subfinder -silent -d {domain} | shuffledns -silent -d {domain} -r {config_resolver} | sed 's/^/{platform} {program} /g' >> {output_tmp}")
+    if os.path.exists(config_resolver):
+        cmds.append(f"subfinder -silent -d {domain} | shuffledns -silent -d {domain} -r {config_resolver} | sed 's/^/{platform} {program} /g' >> {output_tmp}")
     # todo://add more cmds
     for cmd in cmds:
         execute(cmd, platform, program, domain)
