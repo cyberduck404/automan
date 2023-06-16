@@ -2,7 +2,8 @@
 # Description:
 #       assets collector, accept parameter
 #  Usage:
-#       python3 collector.py
+#       python3 collector.py -d domain.com
+#       python3 collector.py -f wildcards.tmp
 import os
 import re
 import string
@@ -29,7 +30,7 @@ def parse_args():
     p.add_argument('-pf', '--platform', type=str, default='hackerone', help='Specify platform which program belong to')  # todo://group
     p.add_argument('-pg', '--program',  type=str, help='Specify program name')
     p.add_argument('-oos', '--out_of_scope', type=str, help='Specify out-of-scope, Ex: a1.com,a2.com')
-    p.add_argument('-f', '--domainFile', type=str, help='Specify domain file which formatted with <datetime> <platform> <handle> <wildcard> [<out-of-scope1>,<o2>,<o3>]')
+    p.add_argument('-f', '--domainFile', type=str, help='Specify domain file which formatted with <platform> <handle> <wildcard> [<out-of-scope1>,<o2>,<o3>]')
     args = p.parse_args()
     ctx = {}
     if args.domain:  # Single program mode
@@ -110,7 +111,7 @@ def collect(platform, program, domain, out_of_scopes):
             if found:
                 continue
             lst.append(line)
-    with open(output, 'a') as f:
+    with open(output, 'w') as f:
         for line in lst:
             f.write(line+'\n')
     # sort & merge
@@ -124,4 +125,4 @@ if __name__ == '__main__':
             _in_scope = detail['in-scope']
             _out_of_scopes = detail['out-of-scope']
             for _domain in _in_scope:
-                collect(_platform, _program, _domain, _out_of_scopes)  # todo://out-of-scope
+                collect(_platform, _program, _domain, _out_of_scopes)
